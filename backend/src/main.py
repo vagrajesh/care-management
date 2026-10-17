@@ -2,7 +2,7 @@
 from fastapi import FastAPI, HTTPException, Query
 
 import service
-from model import EncounterList, Intervention, InterventionUpdate, OperationsSummary
+from model import Encounter, EncounterList, Intervention, InterventionUpdate, OperationsSummary, QueueList, ReadmissionAnalysis
 
 app = FastAPI(title="Care Management API")
 
@@ -15,12 +15,33 @@ def get_encounters(
     return service.list_encounters(limit, offset)
 
 
+@app.get("/encounters/{encounter_id}", response_model=Encounter)
+def get_encounter(encounter_id: int):
+    try:
+        return service.get_encounter(encounter_id)
+    except LookupError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
 @app.get("/care-queue", response_model=EncounterList)
 def get_care_queue(
     limit: int = Query(service.DEFAULT_LIMIT, ge=1, le=service.MAX_LIMIT),
     offset: int = Query(0, ge=0),
 ):
     return service.list_care_queue(limit, offset)
+
+
+@app.get("/care-queue/high", response_model=QueueList)
+def get_high_risk_queue(
+    limit: int = Query(service.DEFAULT_LIMIT, ge=1, le=service.MAX_LIMIT),
+    offset: int = Query(0, ge=0),
+):
+    return service.list_high_risk_queue(limit, offset)
+
+
+@app.get("/operations/readmission-analysis", response_model=ReadmissionAnalysis)
+def get_readmission_analysis():
+    return service.readmission_analysis()
 
 
 @app.get("/operations/summary", response_model=OperationsSummary)
