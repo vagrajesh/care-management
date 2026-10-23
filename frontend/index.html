@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diabetes Patient Management</title>
+  <style>
+    body { font-family: "Segoe UI", Arial, sans-serif; font-size: 16px; line-height: 1.5; color: #222; }
+    h1 { font-size: 28px; font-weight: 600; }
+    h2 { font-size: 20px; font-weight: 600; }
+    label { font-weight: 600; }
+    input, select, button { font-family: inherit; font-size: 16px; }
+    th { text-align: center; }
+    td { text-align: center; }
+    table { width: 100%; border-collapse: collapse; }
+    form div { padding: 8px; }
+    label { display: block; }
+    form { background-color: #f0f4f8; padding: 8px; }
+    th { background-color: #d9e2ec; }
+    h1, h2 { color: #1f4e79; }
+    button { background-color: #cfe3f7; padding: 4px 16px; }
+    th, td { padding: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Diabetes Patient Management</h1>
+
+  <h2>Add Patient Encounter</h2>
+  <form>
+    <div>
+      <label for="patient-number">Patient Number</label>
+      <input type="label" id="patient-number" name="patient_number">
+    </div>
+
+    <div>
+      <label for="age">Age Group</label>
+      <select id="age" name="age">
+        <option value="">Select age group</option>
+        <option value="[0-10)">[0-10)</option>
+        <option value="[10-20)">[10-20)</option>
+        <option value="[20-30)">[20-30)</option>
+        <option value="[30-40)">[30-40)</option>
+        <option value="[40-50)">[40-50)</option>
+        <option value="[50-60)">[50-60)</option>
+        <option value="[60-70)">[60-70)</option>
+        <option value="[70-80)">[70-80)</option>
+        <option value="[80-90)">[80-90)</option>
+        <option value="[90-100)">[90-100)</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="time-in-hospital">Time in Hospital (days)</label>
+      <input type="label" id="time-in-hospital" name="time_in_hospital" min="0">
+    </div>
+
+    <div>
+      <label for="inpatient-visits">Inpatient Visits</label>
+      <input type="label" id="inpatient-visits" name="number_inpatient" min="0">
+    </div>
+
+    <div>
+      <label for="emergency-visits">Emergency Visits</label>
+      <input type="label" id="emergency-visits" name="number_emergency" min="0">
+    </div>
+
+    <div>
+      <label for="medications">Medications</label>
+      <input type="label" id="medications" name="num_medications" min="0">
+    </div>
+
+    <div>
+      <button type="submit" id="add-patient-button">Add</button>
+    </div>
+  </form>
+  <section>
+    <h2>Patients</h2>
+    <table border="1" id="patients-table">
+      <thead id="patients-table-head"></thead>
+      <tbody id="patients-table-body"></tbody>
+    </table>
+  </section>
+  <script type="module" src="dist/patientsTable.js"></script>
+</body>
+</html>

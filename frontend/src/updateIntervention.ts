@@ -1,16 +1,9 @@
 import type { Intervention, InterventionUpdate } from './types/intervention.ts';
 
-const ENCOUNTER_ID = 35754;
-const API_URL = `http://127.0.0.1:8000/interventions/${ENCOUNTER_ID}`;
+const API_BASE = 'http://127.0.0.1:8000';
 
-const body: InterventionUpdate = {
-  status: 'CONTACTED',
-  assigned_to: 'Care Team A',
-  notes: 'Follow-up initiated',
-};
-
-async function updateIntervention(): Promise<Intervention> {
-  const response = await fetch(API_URL, {
+export async function updateIntervention(encounterId: number, body: InterventionUpdate): Promise<Intervention> {
+  const response = await fetch(`${API_BASE}/interventions/${encounterId}`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -18,11 +11,20 @@ async function updateIntervention(): Promise<Intervention> {
   const data = await response.json();
   console.log(JSON.stringify(data, null, 2));
   if (!response.ok) {
-    throw new Error(`API error ${response.status}`);
+    throw new Error(`API error ${response.status}: ${JSON.stringify(data.detail ?? data)}`);
   }
   return data as Intervention;
 }
 
-const interventions: Intervention[] = [];
-interventions.push(await updateIntervention());
-console.log(`Interventions array holds ${interventions.length} item(s)`);
+// Only run standalone under Node; the status page imports updateIntervention instead
+if (typeof window === 'undefined') {
+  const encounterId = Number(process.argv[2] ?? 35754);
+  const body: InterventionUpdate = {
+    status: 'CONTACTED',
+    assigned_to: 'Care Team A',
+    notes: 'Follow-up initiated',
+  };
+  const interventions: Intervention[] = [];
+  interventions.push(await updateIntervention(encounterId, body));
+  console.log(`Interventions array holds ${interventions.length} item(s)`);
+}

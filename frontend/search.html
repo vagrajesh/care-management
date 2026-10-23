@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diabetes Patient Management</title>
+  <style>
+    body { font-family: "Segoe UI", Arial, sans-serif; font-size: 16px; line-height: 1.5; color: #222; }
+    h1 { font-size: 28px; font-weight: 600; }
+    h2 { font-size: 20px; font-weight: 600; }
+    label { font-weight: 600; display: block; }
+    input, select, button { font-family: inherit; font-size: 16px; }
+    th, td { text-align: center; padding: 8px; }
+    th { background-color: #d9e2ec; }
+    table { width: 100%; border-collapse: collapse; }
+    form div { padding: 8px; }
+    form { background-color: #f0f4f8; padding: 8px; }
+    h1, h2 { color: #1f4e79; }
+    button { background-color: #cfe3f7; padding: 4px 16px; }
+  </style>
+</head>
+<body>
+  <h1>Diabetes Patient Management</h1>
+
+  <h2>Search Patient</h2>
+  <form id="search-form">
+    <div>
+      <label for="patient-number">Patient Number</label>
+      <input type="text" id="patient-number" name="patient_number">
+    </div>
+
+    <div>
+      <label for="risk-level">Risk Level</label>
+      <select id="risk-level" name="risk_level">
+        <option value="">All</option>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="risk-score">Risk Score</label>
+      <input type="text" id="risk-score" name="risk_score">
+    </div>
+
+    <div>
+      <button type="submit" id="search-button">Search</button>
+    </div>
+  </form>
+
+  <section>
+    <h2>Results</h2>
+    <p id="search-message"></p>
+    <table border="1" id="results-table">
+      <thead id="results-table-head"></thead>
+      <tbody id="results-table-body"></tbody>
+    </table>
+  </section>
+  <script type="module" src="dist/patientSearch.js"></script>
+</body>
+</html>

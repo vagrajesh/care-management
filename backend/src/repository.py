@@ -36,6 +36,27 @@ def get_encounter(encounter_id):
         return encounter
 
 
+def list_by_patient(patient_nbr, limit, offset):
+    with get_connection() as conn, conn.cursor() as cur:
+        cur.execute(
+            f"SELECT {COLUMNS} FROM patient_encounters WHERE patient_nbr = %s "
+            "ORDER BY encounter_id DESC LIMIT %s OFFSET %s",
+            (patient_nbr, limit, offset),
+        )
+        names = [d.name for d in cur.description]
+        rows = [dict(zip(names, r)) for r in cur.fetchall()]
+        for r in rows:
+            r["risk_score"] = float(r["risk_score"]) if r["risk_score"] is not None else None
+        return rows
+
+
+def count_by_patient(patient_nbr):
+    with get_connection() as conn:
+        return conn.execute(
+            "SELECT count(*) FROM patient_encounters WHERE patient_nbr = %s", (patient_nbr,)
+        ).fetchone()[0]
+
+
 def list_by_risk_levels(levels, limit, offset):
     with get_connection() as conn, conn.cursor() as cur:
         cur.execute(
@@ -81,6 +102,21 @@ def encounter_exists(encounter_id):
         return conn.execute(
             "SELECT 1 FROM patient_encounters WHERE encounter_id = %s", (encounter_id,)
         ).fetchone() is not None
+
+
+def get_intervention(encounter_id):
+    """Latest intervention for the encounter, or None."""
+    with get_connection() as conn, conn.cursor() as cur:
+        cur.execute(
+            "SELECT intervention_id, encounter_id, status, assigned_to, notes "
+            "FROM care_interventions WHERE encounter_id = %s "
+            "ORDER BY intervention_id DESC LIMIT 1",
+            (encounter_id,),
+        )
+        row = cur.fetchone()
+        if row is None:
+            return None
+        return dict(zip([d.name for d in cur.description], row))
 
 
 def update_intervention(encounter_id, status, assigned_to, notes):

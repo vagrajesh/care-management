@@ -22,6 +22,15 @@ VALID_STATUSES = {
 }
 
 
+def get_intervention(encounter_id):
+    if not repository.encounter_exists(encounter_id):
+        raise LookupError(f"Encounter {encounter_id} not found")
+    intervention = repository.get_intervention(encounter_id)
+    if intervention is None:
+        raise LookupError(f"No intervention for encounter {encounter_id}")
+    return intervention
+
+
 def update_intervention(encounter_id, status=None, assigned_to=None, notes=None):
     if status is not None:
         normalized = VALID_STATUSES.get(status.strip().upper())
@@ -114,6 +123,20 @@ def readmission_analysis():
             "queue_readmission_30_rate": queue_rate,
             "lift": _lift(queue_rate, baseline),
         },
+    }
+
+
+def list_patient_encounters(patient_nbr, limit=DEFAULT_LIMIT, offset=0):
+    limit = max(1, min(limit, MAX_LIMIT))
+    offset = max(0, offset)
+    total = repository.count_by_patient(patient_nbr)
+    if total == 0:
+        raise LookupError(f"Patient {patient_nbr} not found")
+    return {
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+        "items": repository.list_by_patient(patient_nbr, limit, offset),
     }
 
 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intervention Status Tracking</title>
+  <style>
+    body { font-family: "Segoe UI", Arial, sans-serif; font-size: 16px; line-height: 1.5; color: #222; }
+    h1 { font-size: 28px; font-weight: 600; }
+    h2 { font-size: 20px; font-weight: 600; }
+    label { font-weight: 600; display: block; }
+    input, select, button, textarea { font-family: inherit; font-size: 16px; }
+    textarea { width: 100%; max-width: 480px; }
+    th, td { text-align: center; padding: 8px; }
+    th { background-color: #d9e2ec; }
+    table { width: 100%; border-collapse: collapse; }
+    form div { padding: 8px; }
+    form { background-color: #f0f4f8; padding: 8px; }
+    h1, h2 { color: #1f4e79; }
+    button { background-color: #cfe3f7; padding: 4px 16px; }
+  </style>
+</head>
+<body>
+  <h1>Diabetes Patient Management</h1>
+  <p><a id="back-link" href="search.html">&larr; Back to Search</a></p>
+
+  <h2>Encounter <span id="encounter-title"></span></h2>
+  <p id="status-message"></p>
+  <table border="1" id="encounter-table">
+    <thead id="encounter-table-head"></thead>
+    <tbody id="encounter-table-body"></tbody>
+  </table>
+
+  <h2>Intervention Status</h2>
+  <p>Current status: <strong id="current-status"></strong></p>
+  <form id="status-form" hidden>
+    <div>
+      <label for="status">Status</label>
+      <select id="status" name="status"></select>
+    </div>
+
+    <div>
+      <label for="assigned-to">Assigned To</label>
+      <input type="text" id="assigned-to" name="assigned_to">
+    </div>
+
+    <div>
+      <label for="notes">Notes</label>
+      <textarea id="notes" name="notes" rows="4"></textarea>
+    </div>
+
+    <div>
+      <button type="submit" id="save-button">Update Status</button>
+    </div>
+  </form>
+  <script type="module" src="dist/statusTracking.js"></script>
+</body>
+</html>

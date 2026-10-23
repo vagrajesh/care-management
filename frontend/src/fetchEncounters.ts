@@ -2,7 +2,7 @@ import type { Encounter, EncounterList } from './types/encounter.ts';
 
 const API_URL = 'http://127.0.0.1:8000/encounters?limit=5';
 
-async function fetchEncounters(): Promise<Encounter[]> {
+export async function fetchEncounters(): Promise<Encounter[]> {
   const response = await fetch(API_URL);
   if (!response.ok) {
     throw new Error(`API error ${response.status}`);
@@ -12,5 +12,8 @@ async function fetchEncounters(): Promise<Encounter[]> {
   return data.items;
 }
 
-const encounters: Encounter[] = await fetchEncounters();
-console.log(`Loaded ${encounters.length} encounters into the array`);
+// Only run standalone under Node; the browser page imports fetchEncounters instead
+if (typeof window === 'undefined') {
+  const encounters: Encounter[] = await fetchEncounters();
+  console.log(`Loaded ${encounters.length} encounters into the array`);
+}

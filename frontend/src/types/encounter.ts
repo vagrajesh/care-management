@@ -1,4 +1,4 @@
-/** Shape of one item returned by GET /encounters, GET /care-queue and GET /encounters/{encounter_id}. */
+/** Shape of one item returned by GET /encounters, GET /care-queue, GET /encounters/{encounter_id} and GET /patients/{patient_nbr}/encounters. */
 export interface Encounter {
   encounter_id: number;
   patient_nbr: number;

@@ -63,6 +63,28 @@ Response: a single `Encounter` (same fields as an item above).
 Data source: `patient_encounters`
 Errors: 404 `Encounter {id} not found`; 422 for a non-integer id.
 
+## GET /patients/{patient_nbr}/encounters
+Status: Backend done
+Purpose: All encounters for one patient, newest first.
+Request: path `patient_nbr` (int); `limit`, `offset`
+Response: `EncounterList` (same shape and item fields as `/encounters`).
+
+```json
+{
+  "total": 1, "limit": 100, "offset": 0,
+  "items": [{
+    "encounter_id": 2278392, "patient_nbr": 8222157, "age": "[0-10)",
+    "time_in_hospital": 1, "number_inpatient": 0, "number_emergency": 0,
+    "number_outpatient": 0, "num_medications": 1, "readmitted": "NO",
+    "risk_score": 0.0, "risk_level": "Low"
+  }]
+}
+```
+
+Data source: `patient_encounters`
+Business rules: filtered by `patient_nbr`, ordered by `encounter_id` descending (newest first); page size capped at 1000. A patient can have many encounters (up to 40 in the data). Not `/encounters/{patient_nbr}`, which would clash with `/encounters/{encounter_id}`.
+Errors: 404 `Patient {patient_nbr} not found` when the patient has no encounters; 422 for a non-integer id or invalid `limit`/`offset`.
+
 ## GET /care-queue
 Status: Done
 Purpose: Patients who may need attention (Medium and High risk).
@@ -90,6 +112,23 @@ Response:
 Fields per item: `encounter_id` int, `patient_nbr` int, `age` string|null, `readmitted` string|null, `risk_score` float|null, `risk_level` string|null.
 Data source: `patient_encounters`
 Business rules: `risk_level = 'High'`, ordered by `risk_score` descending, then `encounter_id`.
+
+## GET /interventions/{encounter_id}
+Status: Done
+Purpose: Read the current intervention (status tracking) for an encounter.
+Request: path `encounter_id`
+Response:
+
+```json
+{
+  "intervention_id": 2, "encounter_id": 35754, "status": "Contacted",
+  "assigned_to": "Care Team A", "notes": "Follow-up initiated"
+}
+```
+
+Data source: `care_interventions`
+Business rules: returns the latest intervention (highest `intervention_id`) for the encounter.
+Errors: 404 unknown encounter, or encounter has no intervention yet.
 
 ## PATCH /interventions/{encounter_id}
 Status: Done
